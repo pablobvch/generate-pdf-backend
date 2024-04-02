@@ -7,17 +7,19 @@ const pdfTemplate = require("./documents");
 
 const app = express();
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3035;
+
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.post("/create-pdf", (req, res) => {
-  pdf.create(pdfTemplate(req.body), {}).toFile("result.pdf", err => {
+  pdf.create(pdfTemplate(req.body), {}).toFile("result.pdf", (err) => {
     if (err) {
-      res.send(Promise.reject({}));
+      console.log({err})
+      return res.status(500).send({ error: "Error by creating PDF" });
     }
-    res.send(Promise.resolve());
+    res.send({ message: "PDF created" });
   });
 });
 
